@@ -1,0 +1,1 @@
+# Módulo para lógica de formateo auxiliar

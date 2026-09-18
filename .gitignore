@@ -1,0 +1,54 @@
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# Environment configuration
+.env
+.env.*
+*.env
+
+# IDE/editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs and debug output
+*.log
+logs/
+
+# Test / coverage artifacts
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+
+# Build and distribution
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Local config overrides
+config/local_settings.py
+config/*.local
+
+# Optional: local tool data
+*.sqlite3
+*.db
+
+# Jupyter notebooks checkpoints
+.ipynb_checkpoints/
