@@ -1,3 +1,13 @@
+import os
+import datetime
+from google.auth.transport.requests import Request
+from google.oauth2.credentials import Credentials
+from google_auth_oauthlib.flow import InstalledAppFlow
+from googleapiclient.discovery import build
+
+# Se define el alcance de lectura y escritura para el calendario
+SCOPES = ["https://www.googleapis.com/auth/calendar"]
+
 def agendar_reunion_en_google_calendar(asunto: str, fecha_inicio: str, asistentes: list) -> dict:
     """
     Agenda una reunión de seguimiento técnico o comercial en el Google Calendar institucional.
@@ -7,11 +17,77 @@ def agendar_reunion_en_google_calendar(asunto: str, fecha_inicio: str, asistente
         fecha_inicio: Fecha y hora en formato string o descripción textual relativa (ej: 'Próxima semana').
         asistentes: Lista con los nombres o correos de las personas que deben participar.
     """
-    # Simulación de inserción en API corporativa de Google Calendar
-    return {
-        "status": "success",
-        "herramienta": "Google Calendar API",
-        "evento_id": "CAL-9982",
-        "asunto": asunto,
-        "msg": f"Reunión agendada de forma tentativa para: {fecha_inicio}."
-    }
+    creds = None
+    # 1. Comprobar si ya existe una sesión guardada previamente
+    if os.path.exists("token.json"):
+        creds = Credentials.from_authorized_user_file("token.json", SCOPES)
+        
+    # 2. Si no hay credenciales válidas, iniciar el inicio de sesión automático
+    if not creds or not creds.valid:
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+        else:
+            if not os.path.exists("credentials.json"):
+                return {
+                    "status": "error",
+                    "herramienta": "Google Calendar API",
+                    "msg": "Falta el archivo 'credentials.json' en la raíz."
+                }
+            # Carga el archivo de credenciales de escritorio limpio
+            flow = InstalledAppFlow.from_client_secrets_file("credentials.json", SCOPES)
+            
+            # EL ESTÁNDAR OFICIAL: port=0 abre un puerto dinámico libre en segundo plano
+            creds = flow.run_local_server(port=0)
+            
+        # Guardar las credenciales para evitar loguearse en el futuro
+        with open("token.json", "w") as token:
+            token.write(creds.to_json())
+
+    try:
+        # 3. Inicializar el servicio oficial v3 de Google Calendar
+        service = build("calendar", "v3", credentials=creds)
+        
+        # --- PARSEO Y CORRECCIÓN DEL RANGO TEMPORAL ---
+        # Gemini suele enviar strings limpios con formato ISO como: "2026-09-22T15:00:00"
+        # Nos aseguramos de limpiar cualquier sufijo para evitar desfases de UTC
+        string_fecha = fecha_inicio.replace('Z', '').split('+')[0]
+        
+        dt_inicio = datetime.datetime.fromisoformat(string_fecha)
+        # Forzamos que la reunión dure exactamente 1 hora en el futuro
+        dt_fin = dt_inicio + datetime.timedelta(hours=1)
+        
+        # Google Calendar exige que los strings incluyan el offset u operación ISO estricta
+        # Al no colocar zona horaria en el string, delegamos el control al parámetro 'timeZone'
+        fecha_inicio_clean = dt_inicio.isoformat()
+        fecha_fin_clean = dt_fin.isoformat()
+
+        event_body = {
+            'summary': asunto,
+            'description': 'Reunión técnica automatizada por UTP Assistant.',
+            'start': {
+                'dateTime': fecha_inicio_clean,
+                'timeZone': 'America/Lima',
+            },
+            'end': {
+                'dateTime': fecha_fin_clean,
+                'timeZone': 'America/Lima',
+            },
+            'attendees': [{'email': email.strip()} for email in asistentes if '@' in email],
+        }
+
+        # Ejecución e inserción real en la nube de Google
+        evento_creado = service.events().insert(calendarId="primary", body=event_body).execute()
+        
+        return {
+            "status": "success",
+            "herramienta": "Google Calendar API (Producción Real)",
+            "evento_id": evento_creado.get('id'),
+            "msg": f"Reunión agendada de forma exitosa. Enlace: {evento_creado.get('htmlLink')}"
+        }
+
+    except Exception as e:
+        return {
+            "status": "error",
+            "herramienta": "Google Calendar API",
+            "msg": f"Fallo al insertar el evento: {str(e)}"
+        }

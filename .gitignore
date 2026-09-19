@@ -13,7 +13,10 @@ env/
 # Environment configuration
 .env
 .env.*
+!.env.example
 *.env
+credentials.json
+token.json
 
 # IDE/editor files
 .vscode/

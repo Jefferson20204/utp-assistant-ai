@@ -43,7 +43,7 @@ class UTPAssistantAgent:
         Por favor, extrae los datos necesarios y determina si se requiere invocar herramientas.
         """
         response = self.client.models.generate_content(
-            model='gemini-3.6-flash',
+            model='gemini-3.5-flash-lite',
             contents=prompt_estructurado,
             config=self.config
         )
@@ -66,6 +66,6 @@ class UTPAssistantAgent:
                     })
         
         return {
-            "respuesta_analista": response.text,
+            "respuesta_analista": response.text if response.text else "Procesamiento de herramientas en ejecución.",
             "herramientas_invocadas": ejecuciones
         }

@@ -8,14 +8,8 @@ load_dotenv(override=True)
 
 st.set_page_config(page_title="UTP Assistant - UTPConsult", page_icon="assets/utp_assistant_icono.png", layout="wide")
 
-with st.sidebar:
-    ruta_logo = "assets/utp_assistant_logo_dark.png"
-    if os.path.exists(ruta_logo):
-        st.image(ruta_logo, use_container_width=True)
-    st.markdown("### Integrantes del Grupo")
-    st.write("- Estudiante 1\n- Estudiante 2\n- Estudiante 3\n- Estudiante 4")
-
 # Verificación de seguridad para evitar que la app se caiga si el archivo no existe
+ruta_logo = "assets/utp_assistant_logo_dark.png"
 if os.path.exists(ruta_logo):
     st.image(ruta_logo, width=140)
 else:
@@ -81,7 +75,7 @@ with col2:
             
             # Mostrar Estado de Acciones
             if resultado["herramientas_invocadas"]:
-                st.info("🔔 **Estado: `requires_action` detectado.** El modelo identificó parámetros válidos y solicitó invocar herramientas externas.")
+                st.info("**Estado: `requires_action` detectado.** El modelo identificó parámetros válidos y solicitó invocar herramientas externas.")
                 
                 for exec_data in resultado["herramientas_invocadas"]:
                     with st.expander(f"🛠️ Función Invocada: `{exec_data['funcion']}`", expanded=True):
