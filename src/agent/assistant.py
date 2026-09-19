@@ -43,7 +43,7 @@ class UTPAssistantAgent:
         Por favor, extrae los datos necesarios y determina si se requiere invocar herramientas.
         """
         response = self.client.models.generate_content(
-            model='gemini-3.5-flash',
+            model='gemini-3.6-flash',
             contents=prompt_estructurado,
             config=self.config
         )

@@ -6,7 +6,7 @@ from src.agent.assistant import UTPAssistantAgent
 # Esto obliga a Python a buscar el archivo .env en la raíz y cargar las variables
 load_dotenv(override=True)
 
-st.set_page_config(page_title="UTP Assistant - UTPConsult", page_icon="🤖", layout="wide")
+st.set_page_config(page_title="UTP Assistant - UTPConsult", page_icon="assets/utp_assistant_icono.png", layout="wide")
 
 with st.sidebar:
     ruta_logo = "assets/utp_assistant_logo_dark.png"
