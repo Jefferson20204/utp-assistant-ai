@@ -75,47 +75,47 @@ with col2:
 
             # 1. Alerta de Estado General basada en el Status real de la API de Gemini
             if resultado["status"] == "requires_action":
-                st.info("🔔 **Estado del Agente: `requires_action` detectado.** El modelo identificó parámetros válidos y coordinó las herramientas externas.")
+                st.info("**Estado del Agente: `requires_action` detectado.** El modelo identificó parámetros válidos y coordinó las herramientas externas.")
             else:
-                st.warning("⚠️ **Estado del Agente: `success` síncrono directo.** Correo analizado sin requerimiento de ejecución de herramientas.")
+                st.warning("**Estado del Agente: `success` síncrono directo.** Correo analizado sin requerimiento de ejecución de herramientas.")
             
             # Extraemos en una lista limpia los nombres de las funciones que la IA invocó en su historial
             funciones_ejecutadas = [exec_data["funcion"] for exec_data in resultado["herramientas_invocadas"]]
             
-            st.markdown("#### 📊 Estado Individual de Integraciones")
+            st.markdown("#### Estado Individual de Integraciones")
 
             # --- CONTROL INDEPENDIENTE: JIRA ---
             if "crear_ticket_en_jira" in funciones_ejecutadas:
                 data_jira = next(item for item in resultado["herramientas_invocadas"] if item["funcion"] == "crear_ticket_en_jira")
-                with st.expander("✅ Gestión de Requisitos (Jira Cloud) — EJECUTADO", expanded=True):
+                with st.expander("Gestión de Requisitos (Jira Cloud) — EJECUTADO", expanded=True):
                     st.markdown("**Parámetros Extraídos por Gemini:**")
                     st.json(data_jira["parametros_extraidos"])
                     st.markdown("**Respuesta del Sistema Externo Sincronizado:**")
                     st.success(f"{data_jira['resultado']['herramienta']}: {data_jira['resultado']['msg']}")
             else:
-                st.warning("⚠️ **Gestión de Requisitos (Jira Cloud) — RETENIDO**\n\nEl correo no contiene solicitudes de desarrollo técnico o el remitente no requiere un caso de ingeniería.")
+                st.warning("**Gestión de Requisitos (Jira Cloud) — RETENIDO**\n\nEl correo no contiene solicitudes de desarrollo técnico o el remitente no requiere un caso de ingeniería.")
 
             # --- CONTROL INDEPENDIENTE: GOOGLE CALENDAR ---
             if "agendar_reunion_en_google_calendar" in funciones_ejecutadas:
                 data_cal = next(item for item in resultado["herramientas_invocadas"] if item["funcion"] == "agendar_reunion_en_google_calendar")
-                with st.expander("✅ Gestión de Agenda (Google Calendar) — EJECUTADO", expanded=True):
+                with st.expander("Gestión de Agenda (Google Calendar) — EJECUTADO", expanded=True):
                     st.markdown("**Parámetros Extraídos por Gemini:**")
                     st.json(data_cal["parametros_extraidos"])
                     st.markdown("**Respuesta del Sistema Externo Sincronizado:**")
                     st.success(f"{data_cal['resultado']['herramienta']}: {data_cal['resultado']['msg']}")
             else:
-                st.warning("⚠️ **Gestión de Agenda (Google Calendar) — RETENIDO**\n\nLa automatización fue bloqueada preventivamente por ambigüedad temporal o ausencia de marcas de tiempo concretas.")
+                st.warning("**Gestión de Agenda (Google Calendar) — RETENIDO**\n\nLa automatización fue bloqueada preventivamente por ambigüedad temporal o ausencia de marcas de tiempo concretas.")
 
             # --- CONTROL INDEPENDIENTE: CRM ---
             if "actualizar_contacto_en_crm" in funciones_ejecutadas:
                 data_crm = next(item for item in resultado["herramientas_invocadas"] if item["funcion"] == "actualizar_contacto_en_crm")
-                with st.expander("✅ Gestión de Prospectos (CRM) — EJECUTADO", expanded=True):
+                with st.expander("Gestión de Prospectos (CRM) — EJECUTADO", expanded=True):
                     st.markdown("**Parámetros Extraídos por Gemini:**")
                     st.json(data_crm["parametros_extraidos"])
                     st.markdown("**Respuesta del Sistema Externo Sincronizado:**")
                     st.success(f"{data_crm['resultado']['herramienta']}: {data_crm['resultado']['msg']}")
             else:
-                st.warning("⚠️ **Gestión de Prospectos (CRM) — RETENIDO**\n\nNo se requirió dar de alta un nuevo lead (remitente institucional o cliente existente).")
+                st.warning("**Gestión de Prospectos (CRM) — RETENIDO**\n\nNo se requirió dar de alta un nuevo lead (remitente institucional o cliente existente).")
 
             # 3. Mostrar la respuesta formal en lenguaje natural
             st.markdown("---")
