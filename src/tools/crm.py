@@ -8,6 +8,14 @@ def actualizar_contacto_en_crm(nombre_cliente: str, empresa: str, correo_contact
         correo_contacto: Dirección electrónica del remitente para futuras comunicaciones.
     """
     # Simulación de inserción en API corporativa del CRM Hubspot/Salesforce
+    print({
+        "status": "success",
+        "herramienta": "CRM UTPConsult",
+        "lead_id": "CRM-7741",
+        "cliente": nombre_cliente,
+        "empresa": empresa,
+        "msg": "Ficha de cliente prospecto registrada y sincronizada con éxito."
+    })
     return {
         "status": "success",
         "herramienta": "CRM UTPConsult",

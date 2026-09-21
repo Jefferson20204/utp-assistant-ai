@@ -1,0 +1,107 @@
+sdk_http_response=HttpResponse(
+  headers=<dict len=12>
+) candidates=[Candidate(
+  content=Content(
+    parts=[
+      Part(
+        text="""Estimado equipo,
+
+Se ha procesado de manera exitosa el correo electrónico entrante de la cliente Ana Torres (TechCorp). A continuación, se detalla el informe de las acciones operativas ejecutadas:
+1. **Gestión en el CRM corporativo:** Se ha registrado y actualizado la ficha del nuevo prospecto en la base de datos central bajo el ID de Lead `CRM-7741`.
+2. **Gestión de Requisitos (Jira):** Se ha creado de forma automática el ticket técnico en el tablero del equipo (`UTP-61`) con prioridad `High`, enfocado en el análisis y desarrollo del módulo de pagos.
+3. **Alerta de Agenda (Regla de Ambigüedad):** La solicitante indicó una intención de reunión para "la próxima semana". Conforme a los protocolos operativos de precisión y al encontrarse la fecha descrita de manera ambigua o relativa, **se ha omitido la llamada a la herramienta de Google Calendar** para evitar asignaciones de tiempo incorrectas. 
+
+**Acción requerida:** Se solicita al departamento comercial o de gestión de proyectos contactar a la Sra. Torres para precisar el día y la hora exacta en que desea llevar a cabo la sesión técnica.
+
+Atentamente,
+
+**UTP Assistant**
+Ingeniero Principal y Gestor de Proyectos de IA
+UTPConsult""",
+        thought_signature=
+      ),
+    ],
+    role='model'
+  ),
+  finish_reason=<FinishReason.STOP: 'STOP'>,
+  index=0
+)] create_time=None model_version='gemini-3.5-flash-lite' prompt_feedback=None response_id='FYOxavrDH_yyqtsPxPbgyAY' usage_metadata=GenerateContentResponseUsageMetadata(
+  candidates_token_count=287,
+  prompt_token_count=1392,
+  prompt_tokens_details=[
+    ModalityTokenCount(
+      modality=<MediaModality.TEXT: 'TEXT'>,
+      token_count=1392
+    ),
+  ],
+  total_token_count=1679
+) model_status=None automatic_function_calling_history=[UserContent(
+  parts=[
+    Part(
+      text="""
+        NUEVO CORREO ENTRANTE PARA ANALIZAR:
+        ----------------------------------
+        REMITENTE_EMAIL: ana.torres@techcorp.com
+        
+        CUERPO_DEL_MENSAJE:
+        Hola equipo de UTP Consult, gracias por la propuesta. Nos interesa avanzar. ¿Podríamos tener una reunión la próxima semana para discutir los detalles técnicos del módulo de pagos? Adjunto un documento con algunos requisitos iniciales. Saludos, Ana Torres de TechCorp.
+        ----------------------------------
+        Por favor, extrae los datos necesarios y determina si se requiere invocar herramientas.
+        """
+    ),
+  ],
+  role='user'
+), Content(
+  parts=[
+    Part(
+      function_call=FunctionCall(
+        args={
+          'correo_contacto': 'ana.torres@techcorp.com',
+          'empresa': 'TechCorp',
+          'nombre_cliente': 'Ana Torres'
+        },
+        id='call_71084',
+        name='actualizar_contacto_en_crm'
+      ),
+      thought_signature=b"\x12^\n\\\x01i\x14}\x13\xd1zd\xa2\xf6\x13w\xa86;\xd5\xb7\xe8\x85\x07\x15x\x80\xa2\x8a\xfc\xc4\x11{\x92\xc3\x16\x96\xb9\x0bl\x8e\x18\xa9[\n\x0c\xf5q\x10\xc6\xeb\xcfH7\xa8Da<2WB\xc6}\x1c\x0eO\xed=[\rU\x9e\x08J\xb6\xec\xac\xae\x8f'M\xad#k\xde\x8a\xed\t\xd6\x18\xd5(\xa2wF\xd1"
+    ),
+    Part(
+      function_call=FunctionCall(
+        args={
+          'descripcion': 'Discutir y definir los requisitos técnicos iniciales para el desarrollo del módulo de pagos, según documentación adjunta por el cliente.',
+          'prioridad': 'High',
+          'resumen': 'Desarrollo y especificación técnica del módulo de pagos'
+        },
+        id='call_71085',
+        name='crear_ticket_en_jira'
+      )
+    ),
+  ],
+  role='model'
+), Content(
+  parts=[
+    Part(
+      function_response=FunctionResponse(
+        name='actualizar_contacto_en_crm',
+        response={
+          'result': <dict len=6>
+        }
+      )
+    ),
+    Part(
+      function_response=FunctionResponse(
+        name='crear_ticket_en_jira',
+        response={
+          'result': {
+            'herramienta': 'Jira Service Desk (Producción Real)',
+            'msg': 'Ticket generado e insertado de forma exitosa en el tablero Kanban del equipo técnico.',
+            'resumen': 'Desarrollo y especificación técnica del módulo de pagos',
+            'status': 'success',
+            'ticket_id': 'UTP-61'
+          }
+        }
+      )
+    ),
+  ],
+  role='user'
+)] parsed=None

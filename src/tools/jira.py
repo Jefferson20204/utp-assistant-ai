@@ -38,6 +38,14 @@ def crear_ticket_en_jira(resumen: str, descripcion: str, prioridad: str = "Mediu
         
         # Disparar la petición de inserción real a los servidores de Atlassian
         nuevo_ticket = jira_client.create_issue(fields=issue_dict)
+
+        print({
+            "status": "success",
+            "herramienta": "Jira Service Desk (Producción Real)",
+            "ticket_id": nuevo_ticket.key,  # Te devolverá dinámicamente UTP-1, UTP-2, etc.
+            "resumen": resumen,
+            "msg": "Ticket generado e insertado de forma exitosa en el tablero Kanban del equipo técnico."
+        })
         
         return {
             "status": "success",

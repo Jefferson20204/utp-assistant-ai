@@ -1,0 +1,66 @@
+CASO 1: EL ESCENARIO IDEAL (Activación Jira y CRM / Bloqueo Calendario por Ambigüedad)
+
+REMITENTE:
+ana.torres@techcorp.com
+
+CUERPO DEL CORREO:
+Hola equipo de UTP Consult, gracias por la propuesta. Nos interesa avanzar. ¿Podríamos tener una reunión la próxima semana para discutir los detalles técnicos del módulo de pagos? Adjunto un documento con algunos requisitos iniciales. Saludos, Ana Torres de TechCorp.
+
+--------------------------------------------------------------------------------
+RESULTADO ESPERADO:
+- actualizar_contacto_en_crm -> ACTIVADO (Ana Torres, TechCorp)
+- crear_ticket_en_jira -> ACTIVADO (Resumen: Requisitos de Módulo de Pagos)
+- agendar_reunion_en_google_calendar -> BLOQUEADO (Frase "la próxima semana" es ambigua)
+
+
+
+
+
+CASO 2: ACTIVACIÓN TOTAL (Sincronización en Vivo del Google Calendar Real)
+
+REMITENTE:
+carlos.mendoza@innovasolutions.com
+
+CUERPO DEL CORREO:
+Estimados ingenieros de UTPConsult, requerimos coordinar la sesión de alineación para la migración del servidor de base de datos. Por favor, agendar la reunión oficial para el día 25 de septiembre de 2026 a las 10:00 horas. El equipo técnico completo debe asistir. Atentamente, Carlos Mendoza de Innova Solutions.
+
+--------------------------------------------------------------------------------
+RESULTADO ESPERADO:
+- actualizar_contacto_en_crm -> ACTIVADO (Carlos Mendoza, Innova Solutions)
+- crear_ticket_en_jira -> ACTIVADO (Resumen: Migración de Base de Datos)
+- agendar_reunion_en_google_calendar -> ACTIVADO (Crea evento físico el 25/09/2026 a las 10:00)
+
+
+
+
+
+CASO 3: REQUISITOS TÉCNICOS SOLAMENTE (Cliente Existente - Exclusión de CRM)
+
+REMITENTE:
+soporte.interno@utpconsult.com
+
+CUERPO DEL CORREO:
+Equipo de desarrollo, se ha detectado un cuello de botella en el módulo de autenticación de la plataforma. Los usuarios experimentan retrasos de más de 5 segundos al iniciar sesión. Es urgente levantar un ticket de soporte con prioridad alta para solucionar este fallo en el próximo sprint.
+
+--------------------------------------------------------------------------------
+RESULTADO ESPERADO:
+- crear_ticket_en_jira -> ACTIVADO (Prioridad: High, Resumen: Cuello de botella autenticación)
+- actualizar_contacto_en_crm -> BLOQUEADO (No es un cliente nuevo externo)
+- agendar_reunion_en_google_calendar -> BLOQUEADO (No hay intención de agenda)
+
+
+
+
+
+CASO 4: CORREO SPAM / DESCARTE (Regla de Comportamiento N° 5 del System Prompt)
+
+REMITENTE:
+ofertas@marketingglobal.net
+
+CUERPO DEL CORREO:
+¡Aumenta las ventas de tu negocio hoy mismo! Ofrecemos los mejores servicios de publicidad digital en redes sociales con 50% de descuento solo por esta semana. Haz clic en el siguiente enlace para agendar una llamada con nuestros asesores comerciales.
+
+--------------------------------------------------------------------------------
+RESULTADO ESPERADO:
+- Estado: Ejecución directa sin herramientas (Todas las APIs se bloquean)
+- Informe de la IA: Resumen indicando que el mensaje es publicitario y se descarta de inmediato.

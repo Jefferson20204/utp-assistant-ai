@@ -90,6 +90,13 @@ def agendar_reunion_en_google_calendar(asunto: str, fecha_inicio: str, asistente
 
         # Ejecución e inserción real en la nube de Google
         evento_creado = service.events().insert(calendarId="primary", body=event_body).execute()
+
+        print({
+            "status": "success",
+            "herramienta": "Google Calendar API (Producción Real)",
+            "evento_id": evento_creado.get('id'),
+            "msg": f"Reunión agendada de forma exitosa. Enlace: {evento_creado.get('htmlLink')}"
+        })
         
         return {
             "status": "success",
