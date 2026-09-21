@@ -42,6 +42,7 @@ class UTPAssistantAgent:
         ----------------------------------
         Por favor, extrae los datos necesarios y determina si se requiere invocar herramientas.
         """
+
         response = self.client.models.generate_content(
             model='gemini-3.5-flash-lite',
             contents=prompt_estructurado,
@@ -56,7 +57,7 @@ class UTPAssistantAgent:
                 func_name = call.name
                 func_args = call.args
                 
-                # Ejecutar la función correspondiente de manera teórica/simulada
+                # Ejecutar la función correspondiente
                 if func_name in self.available_tools:
                     resultado_tool = self.available_tools[func_name](**func_args)
                     ejecuciones.append({

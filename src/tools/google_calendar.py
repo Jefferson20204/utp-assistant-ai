@@ -1,11 +1,11 @@
 import os
+import base64
 import datetime
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 
-# Se define el alcance de lectura y escritura para el calendario
 SCOPES = ["https://www.googleapis.com/auth/calendar"]
 
 def agendar_reunion_en_google_calendar(asunto: str, fecha_inicio: str, asistentes: list) -> dict:
@@ -17,12 +17,25 @@ def agendar_reunion_en_google_calendar(asunto: str, fecha_inicio: str, asistente
         fecha_inicio: Fecha y hora en formato string o descripción textual relativa (ej: 'Próxima semana').
         asistentes: Lista con los nombres o correos de las personas que deben participar.
     """
+    # RECONSTRUCCIÓN DINÁMICA PARA GITHUB CODESPACES
+    creds_b64 = os.getenv("GOOGLE_CREDENTIALS_BASE64")
+    token_b64 = os.getenv("GOOGLE_TOKEN_BASE64")
+
+    # Si estamos en Codespaces y los archivos no existen físicamente, los creamos en memoria/disco temporal
+    if creds_b64 and not os.path.exists("credentials.json"):
+        with open("credentials.json", "wb") as f:
+            f.write(base64.b64decode(creds_b64))
+            
+    if token_b64 and not os.path.exists("token.json"):
+        with open("token.json", "wb") as f:
+            f.write(base64.b64decode(token_b64))
+
     creds = None
-    # 1. Comprobar si ya existe una sesión guardada previamente
+    # Comprobar si ya existe una sesión guardada previamente
     if os.path.exists("token.json"):
         creds = Credentials.from_authorized_user_file("token.json", SCOPES)
         
-    # 2. Si no hay credenciales válidas, iniciar el inicio de sesión automático
+    # Si no hay credenciales válidas, iniciar el inicio de sesión automático
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
@@ -36,7 +49,7 @@ def agendar_reunion_en_google_calendar(asunto: str, fecha_inicio: str, asistente
             # Carga el archivo de credenciales de escritorio limpio
             flow = InstalledAppFlow.from_client_secrets_file("credentials.json", SCOPES)
             
-            # EL ESTÁNDAR OFICIAL: port=0 abre un puerto dinámico libre en segundo plano
+            # Abre un puerto dinámico libre en segundo plano
             creds = flow.run_local_server(port=0)
             
         # Guardar las credenciales para evitar loguearse en el futuro
@@ -44,7 +57,7 @@ def agendar_reunion_en_google_calendar(asunto: str, fecha_inicio: str, asistente
             token.write(creds.to_json())
 
     try:
-        # 3. Inicializar el servicio oficial v3 de Google Calendar
+        # Inicializar el servicio oficial v3 de Google Calendar
         service = build("calendar", "v3", credentials=creds)
         
         # --- PARSEO Y CORRECCIÓN DEL RANGO TEMPORAL ---

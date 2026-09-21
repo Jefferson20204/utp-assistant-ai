@@ -11,7 +11,7 @@ def crear_ticket_en_jira(resumen: str, descripcion: str, prioridad: str = "Mediu
         prioridad: Nivel de urgencia de la tarea (Low, Medium, High). Por defecto es Medium.
     """
     try:
-        # 1. Cargar las credenciales reales de Jira desde el entorno seguro
+        # Cargar las credenciales reales de Jira desde el entorno seguro
         server_url = os.getenv("JIRA_SERVER_URL")
         user_email = os.getenv("JIRA_USER_EMAIL")
         api_token = os.getenv("JIRA_API_TOKEN")
@@ -19,7 +19,7 @@ def crear_ticket_en_jira(resumen: str, descripcion: str, prioridad: str = "Mediu
         if not server_url or not user_email or not api_token:
             raise ValueError("Faltan configurar las credenciales de Jira en el archivo .env")
 
-        # 2. Inicializar el cliente oficial de Jira Cloud
+        # Inicializar el cliente oficial de Jira Cloud
         options = {'server': server_url}
         jira_client = JIRA(options, basic_auth=(user_email, api_token))
         
@@ -27,16 +27,16 @@ def crear_ticket_en_jira(resumen: str, descripcion: str, prioridad: str = "Mediu
         # (Jira Cloud por defecto usa nombres idénticos: 'Low', 'Medium', 'High')
         priority_name = prioridad.capitalize() if prioridad.capitalize() in ["Low", "Medium", "High"] else "Medium"
 
-        # 3. Estructurar el cuerpo de la incidencia (Issue)
+        # Estructurar el cuerpo de la incidencia (Issue)
         issue_dict = {
-            'project': 'UTP',           # La Clave (Key) de 3 letras de tu espacio de trabajo
+            'project': 'UTP', # La Clave (Key) de 3 letras de tu espacio de trabajo
             'summary': resumen,
             'description': descripcion,
             'issuetype': {'name': 'Task'}, # 'Task' es el tipo por defecto en proyectos Kanban
             'priority': {'name': priority_name}
         }
         
-        # 4. Disparar la petición de inserción real a los servidores de Atlassian
+        # Disparar la petición de inserción real a los servidores de Atlassian
         nuevo_ticket = jira_client.create_issue(fields=issue_dict)
         
         return {
